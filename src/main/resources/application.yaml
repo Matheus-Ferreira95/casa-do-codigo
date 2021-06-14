@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: ${DATABASE_URL:jdbc:mysql://localhost:3306/cdc?createDatabaseIfNotExist=true&serverTimezone=UTC}
+    username: root
+    password: 1234567
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+        show-sql: true
+        format_sql: true
+        ddl-auto: update
+
