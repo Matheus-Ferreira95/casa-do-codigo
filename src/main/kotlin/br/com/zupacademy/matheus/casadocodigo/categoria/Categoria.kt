@@ -1,12 +1,12 @@
 package br.com.zupacademy.matheus.casadocodigo.categoria
 
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
+import javax.persistence.*
 
 @Entity
-class Categoria(val nome: String) {
+@Table(uniqueConstraints = [UniqueConstraint(name = "uk_nome", columnNames = ["nome"])])
+class Categoria(
+    @Column(nullable = false, unique = true)
+    val nome: String) {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
