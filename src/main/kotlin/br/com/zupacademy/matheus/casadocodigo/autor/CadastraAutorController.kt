@@ -4,10 +4,8 @@ import org.hibernate.validator.constraints.Length
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.WebDataBinder
+import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
@@ -20,6 +18,12 @@ class CadastraAutorController(private val autorRepository: AutorRepository) {
 
     @PostMapping
     fun cadastrar(@RequestBody @Valid request: NovoAutorRequest): ResponseEntity<Any> {
+
+        if (autorRepository.existsByEmail(request.email!!)) {
+            log.info("Não foi possível realizar o cadastro, email {} já existente", request.email)
+            return ResponseEntity.unprocessableEntity().body("Email já cadastrado")
+        }
+        
         request.paraAutor()
             .let (autorRepository::save)
             .also { log.info("Cadastrando um novo autor") }
