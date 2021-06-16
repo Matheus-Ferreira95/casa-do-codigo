@@ -1,5 +1,6 @@
 package br.com.zupacademy.matheus.casadocodigo.categoria
 
+import br.com.zupacademy.matheus.casadocodigo.compartilhado.validacao.UniqueValue
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -13,12 +14,10 @@ import javax.validation.constraints.NotBlank
 @RequestMapping("/categorias")
 class CadastraCategoriaController(val categoriaRepository: CategoriaRepository) {
 
+
     @PostMapping
     @Transactional(rollbackOn = [ Exception::class ])
     fun cadastra(@RequestBody @Valid request: NovaCategoriaRequest): ResponseEntity<Any> {
-        if (categoriaRepository.existsByNome(request.nome)) {
-            return ResponseEntity.badRequest().body("Já existe uma categoria com nome ${request.nome}")
-        }
         request.paraCategoria()
             .let {
                 categoriaRepository.save(it)
@@ -28,7 +27,9 @@ class CadastraCategoriaController(val categoriaRepository: CategoriaRepository) 
 }
 
 data class NovaCategoriaRequest(
-    @field:NotBlank val nome: String?
+    @field:NotBlank
+    @UniqueValue(fieldName = "nome", targetClass = Categoria::class)
+    val nome: String?
 ) {
     fun paraCategoria(): Categoria = Categoria(nome = nome!!)
 }

@@ -1,5 +1,6 @@
 package br.com.zupacademy.matheus.casadocodigo.autor
 
+import br.com.zupacademy.matheus.casadocodigo.compartilhado.validacao.UniqueValue
 import org.hibernate.validator.constraints.Length
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -22,12 +23,6 @@ class CadastraAutorController(private val autorRepository: AutorRepository) {
     @Transactional(rollbackOn = [ Exception::class ])
     @PostMapping
     fun cadastrar(@RequestBody @Valid request: NovoAutorRequest): ResponseEntity<Any> {
-
-        if (autorRepository.existsByEmail(request.email!!)) {
-            log.info("Não foi possível realizar o cadastro, email {} já existente", request.email)
-            return ResponseEntity.unprocessableEntity().body("Email já cadastrado")
-        }
-
         request.paraAutor()
             .let (autorRepository::save)
             .also { log.info("Cadastrando um novo autor") }
@@ -43,6 +38,7 @@ data class NovoAutorRequest(
 
     @field:NotBlank
     @field:Email
+    @field:UniqueValue(fieldName = "email", targetClass = Autor::class)
     val email: String?,
 
     @field:NotBlank
