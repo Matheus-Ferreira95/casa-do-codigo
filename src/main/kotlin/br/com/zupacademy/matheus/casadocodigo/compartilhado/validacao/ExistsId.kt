@@ -7,33 +7,34 @@ import javax.validation.ConstraintValidatorContext
 import javax.validation.Payload
 import kotlin.reflect.KClass
 
+
 @MustBeDocumented
 @Target(AnnotationTarget.FIELD, AnnotationTarget.TYPE_PARAMETER)
 @Retention(AnnotationRetention.RUNTIME)
-@Constraint(validatedBy = [UniqueValueValidator::class])
-annotation class UniqueValue(
-    val message: String = "Valor já existente",
+@Constraint(validatedBy = [ExistsIdValidator::class])
+annotation class ExistsId(
+    val message: String = "Id não existente",
     val groups: Array<KClass<Any>> = [],
     val payload: Array<KClass<Payload>> = [],
-    val fieldName: String = "kk",
-    val targetClass: KClass<*>
+    val targetClass: KClass<*>,
 )
 
-class UniqueValueValidator(val manager: EntityManager): ConstraintValidator<UniqueValue, Any> {
+class ExistsIdValidator(val manager: EntityManager) : ConstraintValidator<ExistsId, Long> {
 
-    private lateinit var fieldName: String
     private lateinit var targetClass: KClass<*>
 
-    override fun initialize(constraintAnnotation: UniqueValue) {
-        fieldName = constraintAnnotation.fieldName
+    override fun initialize(constraintAnnotation: ExistsId) {
         targetClass = constraintAnnotation.targetClass
     }
 
-    override fun isValid(value: Any?, context: ConstraintValidatorContext?): Boolean {
-        return manager
-            .createQuery("select 1 from ${targetClass.simpleName} where $fieldName =: value")
+    override fun isValid(value: Long?, context: ConstraintValidatorContext?): Boolean {
+        if (value == null) { // se for null é por que o id não era obrigatório.
+            return true
+        }
+
+        return manager.createQuery("SELECT 1 FROM ${targetClass.simpleName} t WHERE t.id =:value")
             .setParameter("value", value)
             .resultList
-            .isEmpty()
+            .isNotEmpty()
     }
 }

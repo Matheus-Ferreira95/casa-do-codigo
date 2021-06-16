@@ -5,5 +5,4 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface CategoriaRepository : JpaRepository<Categoria, Long> {
-    fun existsByNome(nome: String?): Boolean
 }

@@ -38,7 +38,7 @@ data class NovoAutorRequest(
 
     @field:NotBlank
     @field:Email
-    @field:UniqueValue(fieldName = "email", targetClass = Autor::class)
+    @field:UniqueValue(message = "Email já consta como cadastrado.", fieldName = "email", targetClass = Autor::class)
     val email: String?,
 
     @field:NotBlank

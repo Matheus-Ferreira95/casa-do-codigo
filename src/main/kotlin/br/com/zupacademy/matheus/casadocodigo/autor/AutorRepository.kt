@@ -5,5 +5,4 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface AutorRepository : JpaRepository<Autor, Long> {
-    fun existsByEmail(email: String): Boolean
 }

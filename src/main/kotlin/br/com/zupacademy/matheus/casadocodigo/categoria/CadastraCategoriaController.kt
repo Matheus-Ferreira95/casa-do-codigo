@@ -28,7 +28,7 @@ class CadastraCategoriaController(val categoriaRepository: CategoriaRepository) 
 
 data class NovaCategoriaRequest(
     @field:NotBlank
-    @UniqueValue(fieldName = "nome", targetClass = Categoria::class)
+    @field:UniqueValue(message = "Já existe uma categoria com este nome", fieldName = "nome", targetClass = Categoria::class)
     val nome: String?
 ) {
     fun paraCategoria(): Categoria = Categoria(nome = nome!!)
