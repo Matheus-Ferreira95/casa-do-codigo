@@ -32,7 +32,7 @@ class CadastraLivroController(val manager: EntityManager) {
 
     @Transactional(rollbackFor = [Exception::class])
     @PostMapping
-    fun cadastrar(@RequestBody @Valid request: novoLivroRequest): ResponseEntity<Any> {
+    fun cadastrar(@RequestBody @Valid request: NovoLivroRequest): ResponseEntity<Any> {
         request.paraLivro(manager)
             .let{ manager.persist(it) }
             .also { log.info("cadastrando um novo livro") }
@@ -40,7 +40,7 @@ class CadastraLivroController(val manager: EntityManager) {
     }
 }
 
-data class novoLivroRequest(
+data class NovoLivroRequest(
     @field:NotBlank
     @field:UniqueValue(message = "Titulo já cadastrado", fieldName = "titulo", targetClass = Livro::class)
     val titulo: String?,
@@ -70,12 +70,12 @@ data class novoLivroRequest(
     val dataLancamento: LocalDate?,
 
     @field:NotNull
-    @field:ExistsId(targetClass = Categoria::class)
+    @field:ExistsId(message = "Id da categoria inválido", targetClass = Categoria::class)
     val categoriaId: Long?,
 
     @field:NotNull
-    @field:ExistsId(targetClass = Autor::class)
-    val autorId: Long?
+    @field:ExistsId(message = "Id do autor inválido", targetClass = Autor::class)
+    val autorId: Long
 ) {
 
     fun paraLivro(manager: EntityManager): Livro = Livro(
