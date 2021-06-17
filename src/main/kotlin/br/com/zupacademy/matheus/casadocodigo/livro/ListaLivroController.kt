@@ -1,7 +1,5 @@
 package br.com.zupacademy.matheus.casadocodigo.livro
 
-import br.com.zupacademy.matheus.casadocodigo.autor.Autor
-import br.com.zupacademy.matheus.casadocodigo.categoria.Categoria
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page
@@ -11,11 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.server.ResponseStatusException
-import java.math.BigDecimal
-import java.time.LocalDate
-import javax.persistence.Column
-import javax.persistence.ManyToOne
 
 
 @RestController
