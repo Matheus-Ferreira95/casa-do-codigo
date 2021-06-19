@@ -8,4 +8,6 @@ import java.util.*
 interface EstadoRepository : JpaRepository<Estado, Long>{
 
     fun findByNomeAndPaisId(nome: String?, idPais: Long?): Optional<Estado>
+
+    fun existsByPaisId(paisId: Long): Boolean
 }
